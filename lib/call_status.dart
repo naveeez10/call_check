@@ -36,7 +36,10 @@ class _ExampleState extends State<Example> {
       dateFrom: lastMinute,
       type: CallType.incoming,
     );
-    for (CallLogEntry entry in entries) {}
+    for (CallLogEntry entry in entries) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(entry.number!)));
+    }
   }
 
   @override
