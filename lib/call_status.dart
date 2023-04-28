@@ -13,6 +13,7 @@ class Example extends StatefulWidget {
 
 class _ExampleState extends State<Example> {
   PhoneStateStatus status = PhoneStateStatus.NOTHING;
+  List<CallLogEntry> calllogs = [];
   bool granted = false;
 
   Future<bool> requestPermission() async {
@@ -30,15 +31,18 @@ class _ExampleState extends State<Example> {
   }
 
   void getdata() async {
-    int lastMinute = DateTime.now().millisecondsSinceEpoch - 60000;
-
+    int lastMinute = DateTime.now().millisecondsSinceEpoch - (60000);
+    int now = DateTime.now().millisecondsSinceEpoch;
     Iterable<CallLogEntry> entries = await CallLog.query(
       dateFrom: lastMinute,
-      type: CallType.incoming,
+      dateTo: now,
     );
-    for (CallLogEntry entry in entries) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(entry.number!)));
+
+    if (status == PhoneStateStatus.CALL_ENDED) {
+      print('Queried call log entries');
+      for (CallLogEntry entry in entries) {
+        print('NUMBER     : ${entry.number}');
+      }
     }
   }
 
@@ -94,7 +98,9 @@ class _ExampleState extends State<Example> {
               getIcons(),
               color: getColor(),
               size: 80,
-            )
+            ),
+            // if (status == PhoneStateStatus.CALL_ENDED && calllogs.length != 0)
+            //   Text(calllogs[0].number!)
           ],
         ),
       ),
