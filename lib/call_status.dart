@@ -29,6 +29,16 @@ class _ExampleState extends State<Example> {
     }
   }
 
+  void getdata() async {
+    int lastMinute = DateTime.now().millisecondsSinceEpoch - 60000;
+
+    Iterable<CallLogEntry> entries = await CallLog.query(
+      dateFrom: lastMinute,
+      type: CallType.incoming,
+    );
+    for (CallLogEntry entry in entries) {}
+  }
+
   @override
   void initState() {
     super.initState();
@@ -40,13 +50,7 @@ class _ExampleState extends State<Example> {
       setState(() {
         if (event != null) {
           status = event;
-          void getdata() async {
-            final Iterable<CallLogEntry> cLog = await CallLog.get();
-            print('Queried call log entries');
-            for (CallLogEntry entry in cLog) {
-              print('NUMBER     : ${entry.number}');
-            }
-          }
+          getdata();
         }
       });
     });
